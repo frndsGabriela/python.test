@@ -1,0 +1,102 @@
+ARQUIVO = "tarefas.txt"
+
+def carregar_tarefas():
+    tarefas = []
+    try:
+        with open(ARQUIVO, "r", encoding="utf-8") as f:
+            for linha in f:
+                titulo, status = linha.strip().split(";")
+                tarefas.append({"titulo": titulo, "concluida": status == "1"})
+    except FileNotFoundError:
+        pass
+    return tarefas
+
+
+def salvar_tarefas(tarefas):
+    with open(ARQUIVO, "w", encoding="utf-8") as f:
+        for tarefa in tarefas:
+            status = "1" if tarefa["concluida"] else "0"
+            f.write(f"{tarefa['titulo']};{status}\n")
+
+
+def mostrar_tarefas(tarefas):
+    if not tarefas:
+        print("\nNenhuma tarefa cadastrada.")
+        return
+
+    print("\n📋 Lista de Tarefas:")
+    for i, tarefa in enumerate(tarefas, start=1):
+        status = "✅" if tarefa["concluida"] else "⏳"
+        print(f"{i}. {tarefa['titulo']} {status}")
+
+
+def adicionar_tarefa(tarefas):
+    titulo = input("Digite o título da tarefa: ").strip()
+    if titulo:
+        tarefas.append({"titulo": titulo, "concluida": False})
+        print("Tarefa adicionada com sucesso!")
+    else:
+        print("Título inválido.")
+
+
+def concluir_tarefa(tarefas):
+    mostrar_tarefas(tarefas)
+    try:
+        numero = int(input("Digite o número da tarefa concluída: "))
+        tarefas[numero - 1]["concluida"] = True
+        print("Tarefa marcada como concluída!")
+    except (ValueError, IndexError):
+        print("Opção inválida.")
+
+
+def remover_tarefa(tarefas):
+    mostrar_tarefas(tarefas)
+    try:
+        numero = int(input("Digite o número da tarefa a remover: "))
+        removida = tarefas.pop(numero - 1)
+        print(f"Tarefa '{removida['titulo']}' removida!")
+    except (ValueError, IndexError):
+        print("Opção inválida.")
+
+
+def menu():
+    print("""
+
+GERENCIADOR DE TAREFAS
+
+1 - Ver tarefas
+2 - Adicionar tarefa
+3 - Concluir tarefa
+4 - Remover tarefa
+0 - Sair
+""")
+
+
+def main():
+    tarefas = carregar_tarefas()
+
+    while True:
+        menu()
+        opcao = input("Escolha uma opção: ")
+
+        if opcao == "1":
+            mostrar_tarefas(tarefas)
+        elif opcao == "2":
+            adicionar_tarefa(tarefas)
+            salvar_tarefas(tarefas)
+        elif opcao == "3":
+            concluir_tarefa(tarefas)
+            salvar_tarefas(tarefas)
+        elif opcao == "4":
+            remover_tarefa(tarefas)
+            salvar_tarefas(tarefas)
+        elif opcao == "0":
+            salvar_tarefas(tarefas)
+            print("Saindo... Até mais 👋")
+            break
+        else:
+            print("Opção inválida.")
+
+
+if __name__ == "__main__":
+    main()
