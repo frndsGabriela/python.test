@@ -1,0 +1,19 @@
+print("=== Sistema de Notas ===")
+
+nome = input("Digite seu nome: ")
+
+nota1 = float(input("Digite a primeira nota: "))
+nota2 = float(input("Digite a segunda nota: "))
+nota3 = float(input("Digite a terceira nota: "))
+
+media = (nota1 + nota2 + nota3) / 3
+
+print("\nAluno(a):", nome)
+print("Média final:", media)
+
+if media >= 7:
+    print("Situação: APROVADO")
+elif media >= 5:
+    print("Situação: RECUPERAÇÃO")
+else:
+    print("Situação: REPROVADA")
